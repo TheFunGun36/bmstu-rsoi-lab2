@@ -33,6 +33,7 @@ impl Loyalty {
 }
 
 #[derive(Serialize, ToSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct LoyaltyResponse {
     pub status: String,
     pub discount: i32,
