@@ -7,6 +7,34 @@ on:
     branches:
       - master
 jobs:
+  unit-test-gateway:
+    name: Unit test gateway
+    runs-on: ubuntu-latest
+    steps:
+      - name: Perform test
+        working-directory: svc-gateway
+        run: cargo test
+  unit-test-reservation:
+    name: Unit test reservation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Perform test
+        working-directory: svc-reservation
+        run: cargo test
+  unit-test-loyalty:
+    name: Unit test loyalty
+    runs-on: ubuntu-latest
+    steps:
+      - name: Perform test
+        working-directory: svc-loyalty
+        run: cargo test
+  unit-test-payment:
+    name: Unit test payment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Perform test
+        working-directory: svc-payment
+        run: cargo test
   build:
     name: Autograding
     runs-on: ubuntu-latest
