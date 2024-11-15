@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use chrono::DateTime;
+use chrono::{DateTime, NaiveDateTime};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use uuid::Uuid;
@@ -102,8 +102,8 @@ pub struct PaymentInfoServiceResponse {
 #[serde(rename_all = "camelCase")]
 pub struct CreateReservationRequest {
     pub hotel_uid: Uuid,
-    pub start_date: DateTime<chrono::Local>,
-    pub end_date: DateTime<chrono::Local>,
+    pub start_date: NaiveDateTime,
+    pub end_date: NaiveDateTime,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -111,8 +111,8 @@ pub struct CreateReservationRequest {
 pub struct CreateReservationResponse {
     pub reservation_uid: Uuid,
     pub hotel_uid: Uuid,
-    pub start_date: DateTime<chrono::Local>,
-    pub end_date: DateTime<chrono::Local>,
+    pub start_date: NaiveDateTime,
+    pub end_date: NaiveDateTime,
     pub discount: i32,
     pub status: PaymentStatus,
     pub payment: PaymentInfo,
@@ -143,6 +143,7 @@ pub struct PostReservationServiceResponse {
 pub struct LoyaltyInfoResponse {
     pub status: LoyaltyStatus,
     pub discount: i32,
+    pub reservation_count: i32,
 }
 
 #[derive(Serialize, Deserialize, ToSchema)]

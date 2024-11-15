@@ -1,9 +1,10 @@
 use axum::{
-    extract::{Path, Query, State},
+    extract::{Path, Query},
     http::{HeaderMap, StatusCode},
     response::IntoResponse,
     Json,
 };
+use chrono::FixedOffset;
 use uuid::Uuid;
 
 use crate::{dto::*, LOYALTY_ENDPOINT, PAYMENT_ENDPOINT, RESERVATION_ENDPOINT};
@@ -285,6 +286,7 @@ pub async fn post_reservation(
         StatusCode::NOT_FOUND => LoyaltyInfoResponse {
             status: LoyaltyStatus::Bronze,
             discount: 5,
+            reservation_count: 1
         },
         StatusCode::OK => loyalty.json::<LoyaltyInfoResponse>().await.map_err(|e| {
             log::error!("Failed to parse loyalty service response: {e}");
@@ -339,8 +341,8 @@ pub async fn post_reservation(
         .json(&PostReservationServiceRequest {
             hotel_uid: req.hotel_uid,
             payment_uid: payment.payment_uid,
-            start_date: req.start_date,
-            end_date: req.end_date,
+            start_date: req.start_date.and_utc().into(),
+            end_date: req.end_date.and_utc().into(),
         })
         .send()
         .await
@@ -361,8 +363,8 @@ pub async fn post_reservation(
     Ok(Json(CreateReservationResponse {
         reservation_uid: reservation.reservation_uid,
         hotel_uid: reservation.hotel_uid,
-        start_date: reservation.start_date,
-        end_date: reservation.end_date,
+        start_date: reservation.start_date.naive_utc(),
+        end_date: reservation.end_date.naive_utc(),
         discount: loyalty.discount,
         status: reservation.status,
         payment: PaymentInfo {

@@ -34,8 +34,9 @@ impl Loyalty {
 
 #[derive(Serialize, ToSchema)]
 pub struct LoyaltyResponse {
-    status: String,
-    discount: i32,
+    pub status: String,
+    pub discount: i32,
+    pub reservation_count: i32,
 }
 
 impl From<Loyalty> for LoyaltyResponse {
@@ -43,6 +44,7 @@ impl From<Loyalty> for LoyaltyResponse {
         Self {
             status: value.status,
             discount: value.discount,
+            reservation_count: value.reservation_count,
         }
     }
 }
