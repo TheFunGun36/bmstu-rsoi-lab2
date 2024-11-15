@@ -11,6 +11,9 @@ jobs:
     name: Unit test gateway
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Perform test
         working-directory: svc-gateway
         run: cargo test
@@ -18,6 +21,9 @@ jobs:
     name: Unit test reservation
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Perform test
         working-directory: svc-reservation
         run: cargo test
@@ -25,6 +31,9 @@ jobs:
     name: Unit test loyalty
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Perform test
         working-directory: svc-loyalty
         run: cargo test
@@ -32,6 +41,9 @@ jobs:
     name: Unit test payment
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Perform test
         working-directory: svc-payment
         run: cargo test
