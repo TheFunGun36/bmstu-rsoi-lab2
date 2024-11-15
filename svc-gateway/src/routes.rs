@@ -270,8 +270,7 @@ pub async fn post_reservation(
         })?;
 
     // 2) рассчитать по нему стоимость (end_date - start_date)
-    let cost = (req.end_date - req.start_date).num_days() * hotel.price as i64;
-    let cost = cost as f64;
+    let cost = ((req.end_date - req.start_date).num_days() * hotel.price as i64) as i32;
 
     // 3) рассчитать скидку
     let loyalty = client
@@ -296,7 +295,7 @@ pub async fn post_reservation(
         unknown_status_code => return Err(unknown_status_code),
     };
 
-    let cost = cost * (cost - (loyalty.discount as f64) / 100.0);
+    let cost = cost - (cost * loyalty.discount / 100);
 
     // 4) запись в payment
     let payment = client
