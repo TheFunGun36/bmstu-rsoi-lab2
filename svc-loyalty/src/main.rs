@@ -14,6 +14,9 @@ mod logger;
 mod routes;
 mod schema;
 
+#[cfg(test)]
+mod tests;
+
 #[derive(utoipa::OpenApi)]
 #[openapi(
     paths(check_health, put_loyalty, delete_loyalty, get_loyalty),

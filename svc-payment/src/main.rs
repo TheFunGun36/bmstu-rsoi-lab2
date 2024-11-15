@@ -14,6 +14,9 @@ mod logger;
 mod routes;
 mod schema;
 
+#[cfg(test)]
+mod tests;
+
 #[derive(utoipa::OpenApi)]
 #[openapi(
     paths(post_payment, delete_payment, get_payment),

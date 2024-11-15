@@ -11,6 +11,9 @@ mod dto;
 mod logger;
 mod routes;
 
+#[cfg(test)]
+mod tests;
+
 #[derive(utoipa::OpenApi)]
 #[openapi(
     paths(
@@ -41,9 +44,12 @@ mod routes;
 struct ApiDoc;
 
 pub const SERVICE_ENDPOINT: &str = "0.0.0.0:8080";
-pub const RESERVATION_ENDPOINT: &str = "http://reservation:8070";
-pub const PAYMENT_ENDPOINT: &str = "http://payment:8060";
-pub const LOYALTY_ENDPOINT: &str = "http://loyalty:8050";
+// pub const RESERVATION_ENDPOINT: &str = "http://reservation:8070";
+// pub const PAYMENT_ENDPOINT: &str = "http://payment:8060";
+// pub const LOYALTY_ENDPOINT: &str = "http://loyalty:8050";
+pub const RESERVATION_ENDPOINT: &str = "http://localhost:8070";
+pub const PAYMENT_ENDPOINT: &str = "http://localhost:8060";
+pub const LOYALTY_ENDPOINT: &str = "http://localhost:8050";
 
 #[tokio::main(flavor = "multi_thread", worker_threads = 4)]
 async fn main() {

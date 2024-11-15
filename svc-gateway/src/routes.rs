@@ -4,7 +4,7 @@ use axum::{
     response::IntoResponse,
     Json,
 };
-use chrono::FixedOffset;
+use chrono::NaiveTime;
 use uuid::Uuid;
 
 use crate::{dto::*, LOYALTY_ENDPOINT, PAYMENT_ENDPOINT, RESERVATION_ENDPOINT};
@@ -286,7 +286,7 @@ pub async fn post_reservation(
         StatusCode::NOT_FOUND => LoyaltyInfoResponse {
             status: LoyaltyStatus::Bronze,
             discount: 5,
-            reservation_count: 1
+            reservation_count: 1,
         },
         StatusCode::OK => loyalty.json::<LoyaltyInfoResponse>().await.map_err(|e| {
             log::error!("Failed to parse loyalty service response: {e}");
@@ -341,8 +341,16 @@ pub async fn post_reservation(
         .json(&PostReservationServiceRequest {
             hotel_uid: req.hotel_uid,
             payment_uid: payment.payment_uid,
-            start_date: req.start_date.and_utc().into(),
-            end_date: req.end_date.and_utc().into(),
+            start_date: req
+                .start_date
+                .and_time(NaiveTime::from_hms_opt(0, 0, 0).unwrap())
+                .and_utc()
+                .into(),
+            end_date: req
+                .end_date
+                .and_time(NaiveTime::from_hms_opt(0, 0, 0).unwrap())
+                .and_utc()
+                .into(),
         })
         .send()
         .await
@@ -363,8 +371,8 @@ pub async fn post_reservation(
     Ok(Json(CreateReservationResponse {
         reservation_uid: reservation.reservation_uid,
         hotel_uid: reservation.hotel_uid,
-        start_date: reservation.start_date.naive_utc(),
-        end_date: reservation.end_date.naive_utc(),
+        start_date: reservation.start_date.naive_utc().date(),
+        end_date: reservation.end_date.naive_utc().date(),
         discount: loyalty.discount,
         status: reservation.status,
         payment: PaymentInfo {
@@ -521,10 +529,7 @@ pub async fn delete_reservation(
         .map_err(|e| e.status().unwrap_or(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     client
-        .delete(format!(
-            "{}/api/v1/loyalty",
-            LOYALTY_ENDPOINT
-        ))
+        .delete(format!("{}/api/v1/loyalty", LOYALTY_ENDPOINT))
         .header("X-User-Name", username)
         .send()
         .await
